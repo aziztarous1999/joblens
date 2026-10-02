@@ -1,17 +1,33 @@
 {
-  "name": "cv-job-matcher",
-  "version": "0.1.0",
+  "name": "joblens",
+  "version": "1.0.0",
+  "description": "AI job-search co-pilot: match your CV to real offers across Europe and generate tailored cover letters, CVs and salary estimates.",
+  "license": "MIT",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node scripts/dev.mjs",
+    "dev:next": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "postinstall": "node scripts/ollama.mjs install",
+    "ollama:install": "node scripts/ollama.mjs install",
+    "ollama:pull": "node scripts/ollama.mjs pull"
+  },
+  "ollama": {
+    "version": "v0.35.0"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.131.0",
+    "@google/genai": "^2.26.0",
     "next": "16.3.8",
+    "ollama": "^0.6.4",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
+    "unpdf": "^1.8.1",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
