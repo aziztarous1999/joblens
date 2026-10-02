@@ -58,6 +58,7 @@ inventing anything that isn't in your CV.
   - posted in the last 1 h / 2 h / 6 h / 24 h / 3 days;
   - offers with **relocation or visa support** only.
 - **AI match score (0–100)** for every top offer, with strengths ✓ and gaps △. Sort by best match or newest, 15 offers per page.
+- **Focused layout**: every section collapses with a click, and the job-boards side panel can be hidden (☰) to give the offers the full width. Your choices are remembered.
 
 ![Best offers, scored by AI](docs/screenshots/02-best-offers.png)
 

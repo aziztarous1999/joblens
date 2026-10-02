@@ -42,12 +42,15 @@ function App() {
   const [searchId, setSearchId] = useState(0);
   const [hidden, setHidden] = useState<HiddenOffer[]>([]);
   const [searchTerms, setSearchTerms] = useState<SearchTerms | null>(null);
+  // Right-hand "Best job boards" panel: can be hidden to give the main column the full width.
+  const [showBoards, setShowBoards] = useState<boolean>(() => readStorage<boolean>("cvjm.showBoards") ?? true);
   const [selected, setSelected] = useState<Job | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const workspaceRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => writeStorage(FILTERS_KEY, filters), [filters]);
+  useEffect(() => writeStorage("cvjm.showBoards", showBoards), [showBoards]);
 
   function handleProfile(p: Profile | null) {
     setProfile(p);
@@ -105,17 +108,34 @@ function App() {
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-8">
       <header className="mb-8">
-        <h1 className="flex items-center gap-3 text-3xl font-bold tracking-tight">
-          {/* eslint-disable-next-line @next/next/no-img-element -- static SVG logo, no optimisation needed */}
-          <img src="/icon.svg" alt="" width={40} height={40} className="rounded-xl" />
-          JobLens
-        </h1>
+        <div className="flex items-center justify-between gap-4">
+          <h1 className="flex items-center gap-3 text-3xl font-bold tracking-tight">
+            {/* eslint-disable-next-line @next/next/no-img-element -- static SVG logo, no optimisation needed */}
+            <img src="/icon.svg" alt="" width={40} height={40} className="rounded-xl" />
+            JobLens
+          </h1>
+          <button
+            type="button"
+            onClick={() => setShowBoards(!showBoards)}
+            aria-expanded={showBoards}
+            aria-controls="job-boards-panel"
+            title={showBoards ? "Hide the job boards panel" : "Show the job boards panel"}
+            className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition ${
+              showBoards ? "border-accent bg-accent/10 text-accent" : "border-line hover:bg-subtle"
+            }`}
+          >
+            <svg viewBox="0 0 20 20" className="h-5 w-5" aria-hidden="true">
+              <path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+            <span className="hidden sm:inline">Job boards</span>
+          </button>
+        </div>
         <p className="mt-1 text-muted">
           Upload your CV, find the offers that fit you best, then generate a cover letter, a tailored CV, answers to application questions and a sourced salary estimate.
         </p>
       </header>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_22rem]">
+      <div className={`grid gap-6 ${showBoards ? "lg:grid-cols-[1fr_22rem]" : ""}`}>
         <div className="space-y-6">
           <CvStep profile={profile} onProfile={handleProfile} />
           <FiltersPanel filters={filters} onChange={setFilters} onSearch={search} loading={loading} disabled={!profile} />
@@ -138,9 +158,11 @@ function App() {
             {selected && !profile && <p className="text-sm text-muted">Analyse your CV first to generate documents.</p>}
           </div>
         </div>
-        <aside className="lg:sticky lg:top-6 lg:self-start">
-          <JobSites sites={sites} />
-        </aside>
+        {showBoards && (
+          <aside id="job-boards-panel" className="lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:self-start lg:overflow-y-auto">
+            <JobSites sites={sites} />
+          </aside>
+        )}
       </div>
 
       <footer className="mt-10 text-center text-xs text-muted">

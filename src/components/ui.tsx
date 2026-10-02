@@ -1,20 +1,68 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useId, useState, type ReactNode } from "react";
 
-export function Card({ title, step, children, aside }: { title: string; step?: number; children: ReactNode; aside?: ReactNode }) {
+function Chevron({ open }: { open: boolean }) {
+  return (
+    <svg viewBox="0 0 20 20" className={`h-5 w-5 transition-transform ${open ? "rotate-180" : ""}`} aria-hidden="true">
+      <path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+/**
+ * A section panel that can be collapsed (click the title or the chevron).
+ * Collapsed content stays mounted, so form values and generated documents are kept.
+ */
+export function Card({
+  title,
+  step,
+  children,
+  aside,
+  defaultOpen = true,
+}: {
+  title: string;
+  step?: number;
+  children: ReactNode;
+  aside?: ReactNode;
+  defaultOpen?: boolean;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+  const bodyId = useId();
   return (
     <section className="rounded-2xl border border-line bg-panel p-5 shadow-sm">
-      <header className="mb-4 flex items-center justify-between gap-3">
-        <h2 className="flex items-center gap-2 text-lg font-semibold">
-          {step !== undefined && (
-            <span className="grid h-7 w-7 place-items-center rounded-full bg-accent text-sm font-bold text-white">{step}</span>
-          )}
-          {title}
+      <header className={`flex items-center justify-between gap-3 ${open ? "mb-4" : ""}`}>
+        <h2 className="min-w-0 text-lg font-semibold">
+          <button
+            type="button"
+            onClick={() => setOpen(!open)}
+            aria-expanded={open}
+            aria-controls={bodyId}
+            className="flex items-center gap-2 text-left hover:text-accent"
+          >
+            {step !== undefined && (
+              <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-accent text-sm font-bold text-white">{step}</span>
+            )}
+            <span>{title}</span>
+          </button>
         </h2>
-        {aside}
+        <div className="flex shrink-0 items-center gap-2">
+          {open && aside}
+          <button
+            type="button"
+            onClick={() => setOpen(!open)}
+            aria-label={open ? `Collapse ${title}` : `Expand ${title}`}
+            aria-expanded={open}
+            aria-controls={bodyId}
+            className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-subtle hover:text-foreground"
+          >
+            <Chevron open={open} />
+          </button>
+        </div>
       </header>
-      {children}
+      <div id={bodyId} hidden={!open}>
+        {children}
+      </div>
     </section>
   );
 }
