@@ -1,4 +1,5 @@
 import { errorResponse, languageInstruction, requireProvider } from "@/lib/ai";
+import { rateLimit } from "@/lib/rateLimit";
 import type { Job, OutputLanguage } from "@/lib/types";
 
 export const maxDuration = 300;
@@ -61,6 +62,8 @@ const INSTRUCTIONS: Record<Task, string> = {
 };
 
 export async function POST(req: Request) {
+  const limited = rateLimit(req);
+  if (limited) return limited;
   let body: Body;
   try {
     body = (await req.json()) as Body;

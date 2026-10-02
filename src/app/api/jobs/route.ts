@@ -1,4 +1,5 @@
 import * as z from "zod/v4";
+import { rateLimit } from "@/lib/rateLimit";
 import { errorResponse, requireProvider } from "@/lib/ai";
 import { countryFromLocation, MAX_RESULTS, prerank, searchJobs } from "@/lib/jobs";
 import { expandSearchTerms } from "@/lib/searchTerms";
@@ -79,6 +80,8 @@ async function scoreJobs(profile: Profile, jobs: Job[]): Promise<{ matches: Scor
 }
 
 export async function POST(req: Request) {
+  const limited = rateLimit(req, 2);
+  if (limited) return limited;
   try {
     const { filters, profile } = (await req.json()) as { filters: Filters; profile: Profile | null };
     const limit = MAX_RESULTS;

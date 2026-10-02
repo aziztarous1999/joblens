@@ -1,4 +1,5 @@
 import * as z from "zod/v4";
+import { rateLimit } from "@/lib/rateLimit";
 import { errorResponse, requireProvider } from "@/lib/ai";
 import { FIELDS, type CvUpload } from "@/lib/types";
 
@@ -21,6 +22,8 @@ const ProfileSchema = z.object({
 });
 
 export async function POST(req: Request) {
+  const limited = rateLimit(req);
+  if (limited) return limited;
   try {
     const { cv } = (await req.json()) as { cv: CvUpload };
     if (!cv) return Response.json({ error: "No CV provided" }, { status: 400 });

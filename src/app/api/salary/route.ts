@@ -1,4 +1,5 @@
 import { errorResponse, languageInstruction, requireProvider } from "@/lib/ai";
+import { rateLimit } from "@/lib/rateLimit";
 import type { Job, OutputLanguage, Profile } from "@/lib/types";
 
 export const maxDuration = 300;
@@ -24,6 +25,8 @@ A concrete range plus a one-sentence negotiation tip.
 Keep it under 450 words. Do not add a sources list: the app appends one.`;
 
 export async function POST(req: Request) {
+  const limited = rateLimit(req, 2);
+  if (limited) return limited;
   try {
     const { job, profile, country, language } = (await req.json()) as {
       job: Job;

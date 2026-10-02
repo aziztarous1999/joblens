@@ -247,7 +247,7 @@ Bundesagentur, Remotive, Himalayas, Jobicy and Arbeitnow need no key.
 
 
 1. Import the GitHub repo on [vercel.com/new](https://vercel.com/new). The framework is detected automatically.
-2. Add the environment variables: `GEMINI_API_KEY` at minimum, plus `TAVILY_API_KEY` and `ADZUNA_*`. Do **not** set `AI_FALLBACK=ollama`, because Ollama runs on your own PC, not on Vercel. The Ollama download is skipped automatically on Vercel.
+2. Add the environment variables: `GEMINI_API_KEY` at minimum, plus `TAVILY_API_KEY` and `ADZUNA_*`, and **`RATE_LIMIT_PER_HOUR=20`** so one visitor can't use up your free quotas (a search or salary estimate counts as 2 actions). Do **not** set `AI_FALLBACK=ollama`, because Ollama runs on your own PC, not on Vercel. The Ollama download is skipped automatically on Vercel.
 3. Deploy. Every push to `main` redeploys, and pull requests get preview URLs. CI (lint, type-check, build) runs on GitHub Actions.
 
 > A public demo uses your free quotas. Leave `RAPIDAPI_KEY` unset on the demo to keep your ~100 monthly JSearch requests for yourself.
