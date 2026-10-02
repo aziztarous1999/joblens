@@ -8,7 +8,8 @@ const TRUST_LABEL = { official: "Official", high: "Highly trusted", good: "Trust
 
 export function JobSites({ sites }: { sites: RankedSite[] }) {
   return (
-    <Card title="Best job boards for you">
+    // Not collapsible: the whole panel is hidden from the ☰ button in the header instead.
+    <Card title="Best job boards for you" collapsible={false}>
       <p className="-mt-2 mb-3 text-sm text-muted">
         Ranked for your field and filters. “Search” opens each site with your keywords already filled in. Competition levels are estimates: niche and official boards usually get fewer applicants than the big ones.
       </p>

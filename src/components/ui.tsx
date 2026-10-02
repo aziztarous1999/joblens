@@ -11,8 +11,8 @@ function Chevron({ open }: { open: boolean }) {
 }
 
 /**
- * A section panel that can be collapsed (click the title or the chevron).
- * Collapsed content stays mounted, so form values and generated documents are kept.
+ * A section panel that can be collapsed (click the title or the chevron), unless `collapsible`
+ * is false. Collapsed content stays mounted, so form values and generated documents are kept.
  */
 export function Card({
   title,
@@ -20,15 +20,35 @@ export function Card({
   children,
   aside,
   defaultOpen = true,
+  collapsible = true,
 }: {
   title: string;
   step?: number;
   children: ReactNode;
   aside?: ReactNode;
   defaultOpen?: boolean;
+  collapsible?: boolean;
 }) {
-  const [open, setOpen] = useState(defaultOpen);
+  const [isOpen, setOpen] = useState(defaultOpen);
+  const open = !collapsible || isOpen;
   const bodyId = useId();
+
+  if (!collapsible) {
+    return (
+      <section className="rounded-2xl border border-line bg-panel p-5 shadow-sm">
+        <header className="mb-4 flex items-center justify-between gap-3">
+          <h2 className="flex min-w-0 items-center gap-2 text-lg font-semibold">
+            {step !== undefined && (
+              <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-accent text-sm font-bold text-white">{step}</span>
+            )}
+            <span>{title}</span>
+          </h2>
+          {aside}
+        </header>
+        {children}
+      </section>
+    );
+  }
   return (
     <section className="rounded-2xl border border-line bg-panel p-5 shadow-sm">
       <header className={`flex items-center justify-between gap-3 ${open ? "mb-4" : ""}`}>
