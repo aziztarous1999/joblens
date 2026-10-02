@@ -22,12 +22,15 @@ export function FiltersPanel({
   onSearch,
   loading,
   disabled,
+  available = {},
 }: {
   filters: Filters;
   onChange: (f: Filters) => void;
   onSearch: () => void;
   loading: boolean;
   disabled: boolean;
+  /** Key-based sources this server can use; `false` = no key configured (greyed out). */
+  available?: Partial<Record<JobSource, boolean>>;
 }) {
   const [draft, setDraft] = useState("");
   const set = <K extends keyof Filters>(key: K, value: Filters[K]) => onChange({ ...filters, [key]: value });
@@ -131,18 +134,26 @@ export function FiltersPanel({
 
       <div className="mt-4 flex flex-wrap items-center gap-4 text-sm">
         <span className="font-medium text-muted">Job sources:</span>
-        {SOURCES.map((s) => (
-          <label key={s.value} className="flex items-center gap-1.5" title={s.hint}>
-            <input
-              type="checkbox"
-              checked={filters.sources.includes(s.value)}
-              onChange={(e) =>
-                set("sources", e.target.checked ? [...filters.sources, s.value] : filters.sources.filter((x) => x !== s.value))
-              }
-            />
-            {s.label} <span className="text-muted">({s.hint})</span>
-          </label>
-        ))}
+        {SOURCES.map((s) => {
+          const off = available[s.value] === false;
+          return (
+            <label
+              key={s.value}
+              className={`flex items-center gap-1.5 ${off ? "cursor-not-allowed opacity-50" : ""}`}
+              title={off ? "No API key configured on this server" : s.hint}
+            >
+              <input
+                type="checkbox"
+                disabled={off}
+                checked={!off && filters.sources.includes(s.value)}
+                onChange={(e) =>
+                  set("sources", e.target.checked ? [...filters.sources, s.value] : filters.sources.filter((x) => x !== s.value))
+                }
+              />
+              {s.label} <span className="text-muted">({off ? "not configured here" : s.hint})</span>
+            </label>
+          );
+        })}
       </div>
 
       <div className="mt-5">

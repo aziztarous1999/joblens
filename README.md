@@ -13,8 +13,9 @@ then generate a tailored cover letter, a rewritten CV, answers to application qu
 ![Tailwind CSS 4](https://img.shields.io/badge/Tailwind_CSS-4-38bdf8?logo=tailwindcss&logoColor=white)
 ![Gemini · Ollama · Claude](https://img.shields.io/badge/AI-Gemini%20·%20Ollama%20·%20Claude-6366f1)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green)
+[![Live demo](https://img.shields.io/badge/Live_demo-joblens--app.vercel.app-6366f1?logo=vercel&logoColor=white)](https://joblens-app.vercel.app)
 
-**[▶ Live demo](#live-demo)** · [Features](#features) · [How it works](#how-it-works) · [Run it locally](#run-it-locally) · [Deploy](#deploy-to-vercel)
+**[▶ Live demo](https://joblens-app.vercel.app)** · [Features](#features) · [How it works](#how-it-works) · [Run it locally](#run-it-locally) · [Deploy](#deploy-to-vercel)
 
 </div>
 
@@ -260,7 +261,11 @@ Bundesagentur, Remotive, Himalayas, Jobicy and Arbeitnow need no key.
 <summary><h2>🔗 Live demo</h2></summary>
 
 
-🔗 *Coming soon on Vercel.*
+**👉 [https://joblens-app.vercel.app](https://joblens-app.vercel.app)**, hosted on Vercel and redeployed on every push to `main`.
+
+Try it with the fictional CV in [`docs/sample-cv.md`](docs/sample-cv.md): paste it in step 1, then click **Find my best matches**.
+
+To keep the free API quotas available for everyone, the demo allows **20 AI actions per hour per visitor**, and LinkedIn / Indeed results (JSearch) are disabled. [Run it locally](#run-it-locally) for unlimited use.
 
 
 </details>

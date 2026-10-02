@@ -41,6 +41,8 @@ function App() {
   const [dateInfo, setDateInfo] = useState<{ label: string; beforeDateFilter: number; newestPostedAt?: string }>();
   const [searchId, setSearchId] = useState(0);
   const [hidden, setHidden] = useState<HiddenOffer[]>([]);
+  // Key-based sources the server can use (e.g. no JSearch key on the public demo).
+  const [available, setAvailable] = useState<Partial<Record<Filters["sources"][number], boolean>>>({});
   const [searchTerms, setSearchTerms] = useState<SearchTerms | null>(null);
   // Right-hand "Best job boards" panel: can be hidden to give the main column the full width.
   const [showBoards, setShowBoards] = useState<boolean>(() => readStorage<boolean>("cvjm.showBoards") ?? true);
@@ -50,6 +52,12 @@ function App() {
   const workspaceRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => writeStorage(FILTERS_KEY, filters), [filters]);
+  useEffect(() => {
+    fetch("/api/config")
+      .then((r) => r.json())
+      .then((d: { available?: typeof available }) => setAvailable(d.available ?? {}))
+      .catch(() => {});
+  }, []);
   useEffect(() => writeStorage("cvjm.showBoards", showBoards), [showBoards]);
 
   function handleProfile(p: Profile | null) {
@@ -75,7 +83,7 @@ function App() {
         hidden: HiddenOffer[];
         searchTerms?: SearchTerms;
       }>("/api/jobs", {
-        filters,
+        filters: { ...filters, sources: filters.sources.filter((s) => available[s] !== false) },
         profile,
       });
       const manual = jobs.filter((j) => j.source === "manual");
@@ -138,7 +146,7 @@ function App() {
       <div className={`grid gap-6 ${showBoards ? "lg:grid-cols-[1fr_22rem]" : ""}`}>
         <div className="space-y-6">
           <CvStep profile={profile} onProfile={handleProfile} />
-          <FiltersPanel filters={filters} onChange={setFilters} onSearch={search} loading={loading} disabled={!profile} />
+          <FiltersPanel filters={filters} onChange={setFilters} onSearch={search} loading={loading} disabled={!profile} available={available} />
           <ErrorNote message={error} />
           <JobList
             key={searchId}

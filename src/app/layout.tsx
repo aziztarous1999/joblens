@@ -14,8 +14,17 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://joblens-app.vercel.app"),
   title: "JobLens · AI job matcher",
   description: "Match your CV to real job offers across Europe and generate tailored cover letters, CVs and sourced salary estimates.",
+  // Link previews (LinkedIn, Slack, WhatsApp…)
+  openGraph: {
+    title: "JobLens · AI job matcher",
+    description: "Upload your CV, get the real job offers that fit you best across Europe, and generate tailored applications.",
+    url: "https://joblens-app.vercel.app",
+    siteName: "JobLens",
+    type: "website",
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {

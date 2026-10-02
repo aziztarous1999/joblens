@@ -2,6 +2,11 @@
   "name": "joblens",
   "version": "1.0.0",
   "description": "AI job-search co-pilot: match your CV to real offers across Europe and generate tailored cover letters, CVs and salary estimates.",
+  "homepage": "https://joblens-app.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aziztarous1999/joblens.git"
+  },
   "license": "MIT",
   "private": true,
   "scripts": {
